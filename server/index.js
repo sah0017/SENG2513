@@ -1,25 +1,24 @@
 // server/index.js
-const express = require("express");
-const sample = require("./api/sample/sample.json");
+import express from "express";
+import company from "./api/json/company.json" with {type: "json"}; // Importing JSON data from a file
 const app = express();
-const cors = require("cors"); // CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
+import cors from "cors"; // CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
 const CORS = cors();
-const PORT = 3001;
-import { User } from '../models/sample.js';
-
-console.log("Sample data loaded:", sample);
 app.use(CORS);
+const PORT = 3001;
+import User from './models/user.js';
+import { syncModels } from "./models/index.js";
 
-app.get("/api/sample", (req, res) => {
-  return res.json(sample);
+syncModels();
+
+app.get("/api/company", (req, res) => {
+  return res.json(company);
 });
 
-app.get("/api/sample2", async (req, res) => {
+app.get("/api/user", async (req, res) => {
   // Find all users
     const users = await User.findAll();
-    console.log(users.every(user => user instanceof User)); // true
-    console.log('All users:', JSON.stringify(users, null, 2));
-  return JSON.stringify(users, null, 2);
+  return res.json(users);
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

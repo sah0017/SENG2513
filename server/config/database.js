@@ -1,4 +1,11 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-// Option 1: Passing a connection URI
-const sequelize = new Sequelize('sqlite::memory:') // Example for sqlite
+const sequelize = new Sequelize({dialect: 'sqlite',
+                                storage: ':memory:'}); // Example for sqlite
+
+sequelize.authenticate()
+  .then(() => console.log('Database connected'))
+  .catch(err => console.error('Database connection error:', err));
+
+export default sequelize;
+export { sequelize };
