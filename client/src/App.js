@@ -9,9 +9,19 @@ function App() {
   return (
     <>
       <Navbar />
-      <Notes />
-      <Timer />
-      <Guides />
+      <div class="divider">
+        <div class="page">
+          <div id="notes">
+            <Notes />
+          </div>
+          <div id="timer">
+            <Timer />
+          </div>
+        </div>
+        <div id="guides" class="page">
+          <Guides />
+        </div>
+      </div>
     </>
   );
 }
