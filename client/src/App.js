@@ -1,6 +1,5 @@
 // src/App.js
 import "./App.css";
-import Navbar from "./Navbar";
 import Timer from "./Timer"
 import Notes from "./Notes"
 import Guides from "./Guides"
@@ -8,9 +7,8 @@ import Guides from "./Guides"
 function App() {
   return (
     <>
-      <Navbar />
-      <div class="divider">
-        <div class="page">
+      <div className="divider">
+        <div className="left-side">
           <div id="notes">
             <Notes />
           </div>
@@ -18,7 +16,7 @@ function App() {
             <Timer />
           </div>
         </div>
-        <div id="guides" class="page">
+        <div id="guides" className="page">
           <Guides />
         </div>
       </div>
@@ -26,4 +24,3 @@ function App() {
   );
 }
 export default App;
-

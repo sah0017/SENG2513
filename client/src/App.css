@@ -28,37 +28,38 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
+/* Updated layout styles */
+.divider {
+  display: flex;
+  height: calc(100vh - 60px); /* Adjust based on your navbar height */
+  width: 100%;
+  background-color: antiquewhite;
+}
 
-  to {
-    transform: rotate(360deg);
-  }
+.page {
+  height: 100%;
+}
+
+/* Left side container */
+.left-side {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+}
+
+/* Right side container */
+#guides {
+  width: 50%;
+  background-color: yellow;
 }
 
 #notes {
-  height: 300px;
+  height: 50%;
   background-color: aqua;
 }
 
 #timer {
-  height: 100px;
+  height: 50%;
   background-color: greenyellow;
-}
-
-#guides {
-  background-color: yellow;
-}
-
-.page {
-  min-width: 100px;
-  height: auto;
-}
-
-.divider {
-  display: flex;
-  height: auto;
-  background-color: antiquewhite;
 }
