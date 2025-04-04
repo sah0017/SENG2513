@@ -32,7 +32,33 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+#notes {
+  height: 300px;
+  background-color: aqua;
+}
+
+#timer {
+  height: 100px;
+  background-color: greenyellow;
+}
+
+#guides {
+  background-color: yellow;
+}
+
+.page {
+  min-width: 100px;
+  height: auto;
+}
+
+.divider {
+  display: flex;
+  height: auto;
+  background-color: antiquewhite;
 }
