@@ -10,15 +10,12 @@ root.render(
   <React.StrictMode>
     <div>
       <header>
-        <h1>React App</h1>
+        <h1>Video Game Companion App</h1>
         <div></div>
       </header>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-      <footer>
-        <p>&copy; 2025 Your Project Name</p>
-      </footer>
     </div>
 
 
