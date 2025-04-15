@@ -23,4 +23,20 @@
     font-family: monospace;
 }
 
+.btn {
+    background-color: #64d2ff;
+    color: #121418;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 0px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+.btn:hover {
+    background-color: #a5e9ff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
   
