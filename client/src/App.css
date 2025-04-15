@@ -72,7 +72,7 @@ html, body {
 }
 
 #notes {
-  height: 60%;
+  height: 70%;
   background-color: #2a3035;
   padding: 20px;
   overflow-y: auto;
@@ -80,7 +80,7 @@ html, body {
 }
 
 #timer {
-  height: 40%;
+  height: 30%;
   background-color: #343a40;
   display: flex;
   align-items: center;
