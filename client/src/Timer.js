@@ -30,8 +30,7 @@ const Timer = () => {
     };
 
     return (
-        <div className="container">
-            <h1>Stopwatch</h1>
+        <div className="container"> 
             <div id="time">
                 <span className="digit">{String(hours).padStart(2, "0")}</span>
                 <span className="txt">Hr</span>
