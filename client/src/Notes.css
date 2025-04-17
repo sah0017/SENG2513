@@ -113,3 +113,25 @@
   .addBtn:hover {
     background-color: #bbb;
   }
+
+  .action-buttons {
+    margin: 10px 0;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .export-btn, .import-btn {
+    padding: 8px 16px;
+    background-color: #64d2ff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .import-btn {
+    background-color: #4ca0c1;
+  }
+  
+  .export-btn:hover, .import-btn:hover {
+    opacity: 0.8;
+  }
