@@ -3,9 +3,16 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
 const User = sequelize.define('user', {
-  username: DataTypes.STRING,
-  email: DataTypes.STRING,
-  birthday: DataTypes.DATE,
+  id : {
+    type : DataTypes.INTEGER,
+    primaryKey : true
+    },
+  username: {
+    type : DataTypes.STRING,
+    unique : true,
+    allowNull : false
+  },
+  password: DataTypes.STRING,
 });
 
 User.prototype.toJSON = function() {

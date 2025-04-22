@@ -1,5 +1,8 @@
 import sequelize from '../config/database.js';
 import User from './user.js';
+import Games from './games.js';
+import Notes from './notes.js';
+import Articles from './articles.js';
 
 const syncModels = async () => {
     try {
@@ -13,7 +16,6 @@ const syncModels = async () => {
     for (let i = 1; i <= 10; i++) {
         users.push({
             username: `User ${i}`,
-            email: `user${i}@example.com`,
             // Add other properties as needed
         });
     }
@@ -25,6 +27,23 @@ const syncModels = async () => {
         })
         .catch((error) => {
             console.error('Error inserting users:', error);
+        });
+
+    const games = [];
+    for (let i = 1; i <= 10; i++) {
+        users.push({
+            title: `Game ${i}`,
+            // Add other properties as needed
+        });
+    }
+
+    // Insert games into the table
+    User.bulkCreate(games)
+        .then(() => {
+            console.log('Games inserted successfully.');
+        })
+        .catch((error) => {
+            console.error('Error inserting games:', error);
         });
 
   };
