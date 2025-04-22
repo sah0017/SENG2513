@@ -12,6 +12,11 @@ const Notes = sequelize.define('notes', {
   content : DataTypes.JSON,
 });
 
+Notes.associate = function(models) {
+    Notes.belongsTo(models.Games, {foreignKey : 'gameId', as : 'game'})
+    Notes.belongsTo(models.User, {foreignKey : 'userId', as : 'user'})
+};
+
 Notes.prototype.toJSON = function() {
   const values = { ...this.get() };
   return values;
