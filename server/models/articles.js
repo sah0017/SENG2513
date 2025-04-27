@@ -10,6 +10,10 @@ const Articles = sequelize.define('articles', {
   content : DataTypes.JSON,
 });
 
+Articles.associate = function(models) {
+    Articles.belongsTo(models.Games, {foreignKey : 'gameId', as : 'game'})
+};
+
 Articles.prototype.toJSON = function() {
   const values = { ...this.get() };
   return values;
