@@ -16,7 +16,7 @@ describe('Timer Component', () => {
     expect(screen.getByText('Sec')).toBeInTheDocument();
     
     // Initial time should be 00:00:00:00
-    const digits = screen.getAllByClassName('digit');
+    const digits = screen.getAllByTestId('digit');
     expect(digits[0]).toHaveTextContent('00'); // Hours
     expect(digits[1]).toHaveTextContent('00'); // Minutes
     expect(digits[2]).toHaveTextContent('00'); // Seconds
@@ -35,7 +35,7 @@ describe('Timer Component', () => {
     });
     
     // Time should be 00:00:01:00
-    const digits = screen.getAllByClassName('digit');
+    const digits = screen.getAllByTestId('digit');
     expect(digits[0]).toHaveTextContent('00'); // Hours
     expect(digits[1]).toHaveTextContent('00'); // Minutes
     expect(digits[2]).toHaveTextContent('01'); // Seconds
@@ -57,7 +57,7 @@ describe('Timer Component', () => {
     fireEvent.click(screen.getByText('Stop'));
     
     // Record current time values
-    const digitsAfterStop = screen.getAllByClassName('digit');
+    const digitsAfterStop = screen.getAllByTestId('digit');
     const secondsAfterStop = digitsAfterStop[2].textContent;
     
     // Advance timer more
@@ -66,7 +66,7 @@ describe('Timer Component', () => {
     });
     
     // Time should remain the same as when stopped
-    const digitsAfterMoreTime = screen.getAllByClassName('digit');
+    const digitsAfterMoreTime = screen.getAllByTestId('digit');
     expect(digitsAfterMoreTime[2].textContent).toBe(secondsAfterStop);
   });
 
@@ -85,7 +85,7 @@ describe('Timer Component', () => {
     fireEvent.click(screen.getByText('Reset'));
     
     // Timer should be reset to 00:00:00:00
-    const digits = screen.getAllByClassName('digit');
+    const digits = screen.getAllByTestId('digit');
     expect(digits[0]).toHaveTextContent('00'); // Hours
     expect(digits[1]).toHaveTextContent('00'); // Minutes
     expect(digits[2]).toHaveTextContent('00'); // Seconds
@@ -106,7 +106,7 @@ describe('Timer Component', () => {
     });
     
     // Check if time is displayed correctly
-    const digits = screen.getAllByClassName('digit');
+    const digits = screen.getAllByTestId('digit');
     expect(digits[0]).toHaveTextContent('01'); // Hours
     expect(digits[1]).toHaveTextContent('30'); // Minutes
     expect(digits[2]).toHaveTextContent('45'); // Seconds
