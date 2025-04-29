@@ -1,54 +1,53 @@
 import sequelize from '../config/database.js';
-import User from './user.js';
 import Games from './games.js';
-import Notes from './notes.js';
 import Articles from './articles.js';
 
+// Set up associations between models
+const setupAssociations = () => {
+  // Define associations if they exist
+  if (Games.associate) {
+    Games.associate({ Articles });
+  }
+  
+  if (Articles.associate) {
+    Articles.associate({ Games });
+  }
+};
+
 const syncModels = async () => {
-    try {
-      await sequelize.sync({ alter: true }); // Use { force: true } to drop tables
-      console.log('All models were synchronized successfully.');
-    } catch (error) {
-      console.error('Error synchronizing models:', error);
-    }
-    // Generate 10 users
-    const users = [];
-    for (let i = 1; i <= 10; i++) {
-        users.push({
-            username: `User ${i}`,
-            // Add other properties as needed
-        });
-    }
-
-    // Insert users into the table
-    User.bulkCreate(users)
-        .then(() => {
-            console.log('Users inserted successfully.');
-        })
-        .catch((error) => {
-            console.error('Error inserting users:', error);
-        });
-
+  try {
+    // Set up associations before syncing
+    setupAssociations();
+    
+    // Sync models with database
+    await sequelize.sync({ alter: true }); // Use { force: true } to drop tables
+    console.log('All models were synchronized successfully.');
+    
+    // Seed some example games
     const games = [];
-    for (let i = 1; i <= 10; i++) {
-        users.push({
-            title: `Game ${i}`,
-            // Add other properties as needed
-        });
+    for (let i = 1; i <= 5; i++) {
+      games.push({
+        title: `Game ${i}`
+      });
     }
 
     // Insert games into the table
-    User.bulkCreate(games)
-        .then(() => {
-            console.log('Games inserted successfully.');
-        })
-        .catch((error) => {
-            console.error('Error inserting games:', error);
-        });
+    await Games.bulkCreate(games, { ignoreDuplicates: true })
+      .then(() => {
+        console.log('Games inserted successfully.');
+      })
+      .catch((error) => {
+        console.error('Error inserting games:', error);
+      });
+      
+  } catch (error) {
+    console.error('Error synchronizing models:', error);
+  }
+};
 
-  };
-  
- export {
-    sequelize, User, syncModels
-  };
-  
+export {
+  sequelize,
+  Games,
+  Articles,
+  syncModels
+};
