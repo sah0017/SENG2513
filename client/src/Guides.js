@@ -2,180 +2,144 @@ import React, { useState, useEffect } from "react";
 import "./Guides.css";
 
 const Guides = () => {
-  // State for guides data and search functionality
-  const [guides, setGuides] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  // State for games and articles data
+  const [games, setGames] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const [filteredArticles, setFilteredArticles] = useState([]);
+  
+  // State for search functionality
+  const [selectedGameId, setSelectedGameId] = useState(""); // For game selection
+  const [articleSearchTerm, setArticleSearchTerm] = useState(""); // For article search
+  
+  // Loading and error states
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Load guides data from JSON file
+  // Fetch games from the database
   useEffect(() => {
-    // In a real application, you'd use fetch to get data from your server
-    // For demonstration, we're simulating an API call with our sample data
-    
-    // Simulate loading from an API endpoint
-    const fetchGuides = async () => {
+    const fetchGames = async () => {
       try {
-        // In a real app, you would use:
-        // const response = await fetch('/api/guides');
-        // const data = await response.json();
+        setLoading(true);
+        const response = await fetch('/api/games');
         
-        // For demonstration, we're using a timeout to simulate network delay
-        // and hardcoding the response data
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         
-        // This simulates the JSON data that would come from a server
-        const responseData = {
-          "guides": [
-            {
-              "id": 1,
-              "title": "Getting Started",
-              "content": "Welcome to the Video Game Companion App! This guide will help you understand the basics of the game and how to navigate the interface. Start by exploring the character creation options and selecting your starting class.",
-              "category": "beginner",
-              "tags": ["tutorial", "basics", "new players"]
-            },
-            {
-              "id": 2,
-              "title": "Combat Techniques",
-              "content": "Learn advanced combat techniques to defeat powerful enemies. Master the art of parrying, dodging, and counter-attacking to become a formidable warrior.",
-              "category": "advanced",
-              "tags": ["fighting", "combat", "skills"]
-            },
-            {
-              "id": 3,
-              "title": "Character Builds",
-              "content": "Explore different character builds and strategies for various playstyles. Whether you prefer ranged combat, melee fighting, or magic spells, this guide provides optimal stat allocations.",
-              "category": "intermediate",
-              "tags": ["builds", "strategy", "stats"]
-            },
-            {
-              "id": 4,
-              "title": "Secret Locations",
-              "content": "Discover hidden areas and secret treasures throughout the game world. This guide reveals the locations of rare items, concealed passages, and optional bosses.",
-              "category": "advanced",
-              "tags": ["exploration", "secrets", "treasures"]
-            },
-            {
-              "id": 5,
-              "title": "Crafting Basics",
-              "content": "Learn how to craft essential items for your adventure. This guide covers gathering resources, finding recipes, and understanding the crafting system.",
-              "category": "beginner", 
-              "tags": ["crafting", "items", "resources"]
-            },
-            {
-              "id": 6,
-              "title": "Multiplayer Tips",
-              "content": "Make the most of your multiplayer experience with these essential tips for cooperative and competitive play.",
-              "category": "intermediate",
-              "tags": ["multiplayer", "coop", "pvp"]
-            },
-            {
-              "id": 7,
-              "title": "Boss Strategy: The Fallen King",
-              "content": "A detailed walkthrough on defeating the challenging Fallen King boss. This guide breaks down each phase of the fight.",
-              "category": "advanced",
-              "tags": ["boss", "strategy", "combat"]
-            }
-          ]
-        };
-        
-        setTimeout(() => {
-          setGuides(responseData.guides);
-          setLoading(false);
-        }, 800);
-
+        const data = await response.json();
+        setGames(data);
+        setLoading(false);
       } catch (err) {
-        setError("Failed to load guides: " + err.message);
+        setError("Failed to load games: " + err.message);
         setLoading(false);
       }
     };
     
-    fetchGuides();
+    fetchGames();
   }, []);
 
-  // Get unique categories for filter
-  const categories = ["all", ...new Set(guides.map(guide => guide.category))];
-  
-  // Filter guides based on search term and selected category
-  const filteredGuides = guides.filter(guide => {
-    // Filter by search term
-    const matchesSearch = 
-      guide.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      guide.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (guide.tags && guide.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())));
+  // Fetch articles based on selected game
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        
+        // If no game is selected, fetch all articles
+        const endpoint = selectedGameId 
+          ? `/api/articles?gameId=${selectedGameId}` 
+          : '/api/articles';
+        
+        const response = await fetch(endpoint);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setArticles(data);
+        setFilteredArticles(data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load articles: " + err.message);
+        setLoading(false);
+      }
+    };
     
-    // Filter by category (if "all" is selected, include all categories)
-    const matchesCategory = selectedCategory === "all" || guide.category === selectedCategory;
+    fetchArticles();
+  }, [selectedGameId]);
+
+  // Filter articles based on search term
+  useEffect(() => {
+    const results = articles.filter(article =>
+      article.title.toLowerCase().includes(articleSearchTerm.toLowerCase()) ||
+      article.content.toLowerCase().includes(articleSearchTerm.toLowerCase())
+    );
     
-    return matchesSearch && matchesCategory;
-  });
+    setFilteredArticles(results);
+  }, [articleSearchTerm, articles]);
 
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+  // Handle game selection change
+  const handleGameChange = (e) => {
+    setSelectedGameId(e.target.value);
   };
   
-  // Handle category selection
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+  // Handle article search input change
+  const handleArticleSearchChange = (e) => {
+    setArticleSearchTerm(e.target.value);
   };
-  
-  // Handle tag click to filter by tag
-  const handleTagClick = (tag) => {
-    setSearchTerm(tag);
-  };
-
-
 
   return (
     <div className="guides-container">
       <h1>Game Guides</h1>
       
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="Search guides..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="search-input"
-        />
-        <div className="filter-container">
+        {/* Game selection dropdown */}
+        <div className="game-select-container">
           <select 
-            value={selectedCategory} 
-            onChange={handleCategoryChange}
-            className="category-select"
+            value={selectedGameId} 
+            onChange={handleGameChange}
+            className="game-select"
           >
-            {categories.map(category => (
-              <option key={category} value={category}>
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+            <option value="">All Games</option>
+            {games.map(game => (
+              <option key={game.id} value={game.id}>
+                {game.title}
               </option>
             ))}
           </select>
         </div>
+        
+        {/* Article search input */}
+        <input
+          type="text"
+          placeholder="Search articles..."
+          value={articleSearchTerm}
+          onChange={handleArticleSearchChange}
+          className="search-input"
+        />
       </div>
       
       <div className="guides-list">
-        {filteredGuides.length > 0 ? (
-          filteredGuides.map(guide => (
-            <div key={guide.id} className="guide-card">
-              <h2 className="guide-title">{guide.title}</h2>
+        {loading ? (
+          <div className="loading">Loading...</div>
+        ) : error ? (
+          <div className="error">Error: {error}</div>
+        ) : filteredArticles.length > 0 ? (
+          filteredArticles.map(article => (
+            <div key={article.id} className="guide-card">
+              <h2 className="guide-title">{article.title}</h2>
               <div className="guide-meta">
-                <span className="guide-category">{guide.category}</span>
-                {guide.tags && guide.tags.map(tag => (
-                  <span 
-                    key={tag} 
-                    className="guide-tag" 
-                    onClick={() => handleTagClick(tag)}
-                  >
-                    #{tag}
-                  </span>
-                ))}
+                <span className="guide-category">
+                  {games.find(game => game.id === article.gameId)?.title || "Unknown Game"}
+                </span>
               </div>
-              <p className="guide-content">{guide.content}</p>
+              <p className="guide-content">{article.content}</p>
             </div>
           ))
         ) : (
-          <div className="no-results">No guides found matching "{searchTerm}"</div>
+          <div className="no-results">
+            No articles found {articleSearchTerm ? `matching "${articleSearchTerm}"` : ""}
+          </div>
         )}
       </div>
     </div>

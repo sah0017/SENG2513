@@ -1,6 +1,5 @@
 // server/index.js
 import express from "express";
-import company from "./api/json/company.json" with {type: "json"}; // Importing JSON data from a file
 import cors from "cors";
 import { Games, Articles, syncModels } from "./models/index.js";
 
@@ -13,11 +12,6 @@ const PORT = 3001;
 
 // Sync all models with the database
 syncModels();
-
-// Company API route (kept from original)
-app.get("/api/company", (req, res) => {
-  return res.json(company);
-});
 
 // Games routes
 app.get("/api/games", async (req, res) => {
