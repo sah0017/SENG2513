@@ -8,8 +8,8 @@ const Guides = () => {
   const [filteredArticles, setFilteredArticles] = useState([]);
   
   // State for search functionality
-  const [selectedGameId, setSelectedGameId] = useState(""); // For game selection
-  const [articleSearchTerm, setArticleSearchTerm] = useState(""); // For article search
+  const [gameSearchTerm, setGameSearchTerm] = useState(""); // For filtering by game
+  const [titleSearchTerm, setTitleSearchTerm] = useState(""); // For filtering by title
   
   // Loading and error states
   const [loading, setLoading] = useState(true);
@@ -38,18 +38,13 @@ const Guides = () => {
     fetchGames();
   }, []);
 
-  // Fetch articles based on selected game
+  // Fetch all articles
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         setLoading(true);
         
-        // If no game is selected, fetch all articles
-        const endpoint = selectedGameId 
-          ? `/api/articles?gameId=${selectedGameId}` 
-          : '/api/articles';
-        
-        const response = await fetch(endpoint);
+        const response = await fetch('/api/articles');
         
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -66,26 +61,29 @@ const Guides = () => {
     };
     
     fetchArticles();
-  }, [selectedGameId]);
+  }, []);
 
-  // Filter articles based on search term
+  // Filter articles based on both game and title search terms
   useEffect(() => {
-    const results = articles.filter(article =>
-      article.title.toLowerCase().includes(articleSearchTerm.toLowerCase()) ||
-      article.content.toLowerCase().includes(articleSearchTerm.toLowerCase())
-    );
+    const results = articles.filter(article => {
+      const gameTitle = games.find(game => game.id === article.gameId)?.title || "";
+      const matchesGame = gameTitle.toLowerCase().includes(gameSearchTerm.toLowerCase());
+      const matchesTitle = article.title.toLowerCase().includes(titleSearchTerm.toLowerCase());
+      
+      return (gameSearchTerm === "" || matchesGame) && (titleSearchTerm === "" || matchesTitle);
+    });
     
     setFilteredArticles(results);
-  }, [articleSearchTerm, articles]);
+  }, [gameSearchTerm, titleSearchTerm, articles, games]);
 
-  // Handle game selection change
-  const handleGameChange = (e) => {
-    setSelectedGameId(e.target.value);
+  // Handle game search input change
+  const handleGameSearchChange = (e) => {
+    setGameSearchTerm(e.target.value);
   };
   
-  // Handle article search input change
-  const handleArticleSearchChange = (e) => {
-    setArticleSearchTerm(e.target.value);
+  // Handle title search input change
+  const handleTitleSearchChange = (e) => {
+    setTitleSearchTerm(e.target.value);
   };
 
   return (
@@ -93,30 +91,27 @@ const Guides = () => {
       <h1>Game Guides</h1>
       
       <div className="search-container">
-        {/* Game selection dropdown */}
-        <div className="game-select-container">
-          <select 
-            value={selectedGameId} 
-            onChange={handleGameChange}
-            className="game-select"
-          >
-            <option value="">All Games</option>
-            {games.map(game => (
-              <option key={game.id} value={game.id}>
-                {game.title}
-              </option>
-            ))}
-          </select>
+        {/* Game search input on the left */}
+        <div className="search-left">
+          <input
+            type="text"
+            placeholder="Filter by game..."
+            value={gameSearchTerm}
+            onChange={handleGameSearchChange}
+            className="search-input"
+          />
         </div>
         
-        {/* Article search input */}
-        <input
-          type="text"
-          placeholder="Search articles..."
-          value={articleSearchTerm}
-          onChange={handleArticleSearchChange}
-          className="search-input"
-        />
+        {/* Title search input on the right */}
+        <div className="search-right">
+          <input
+            type="text"
+            placeholder="Filter by title..."
+            value={titleSearchTerm}
+            onChange={handleTitleSearchChange}
+            className="search-input"
+          />
+        </div>
       </div>
       
       <div className="guides-list">
@@ -138,7 +133,7 @@ const Guides = () => {
           ))
         ) : (
           <div className="no-results">
-            No articles found {articleSearchTerm ? `matching "${articleSearchTerm}"` : ""}
+            No articles found {gameSearchTerm || titleSearchTerm ? "matching your filters" : ""}
           </div>
         )}
       </div>
